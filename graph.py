@@ -157,7 +157,47 @@ class Graph:
         path: [list of nodes from 'start' to 'target'] (path should be the optimal solution)
         cost: total cost of going through the path (should be float)
         }"""
-        pass
+        def return_path(current_node):
+            path = []
+            while current_node:
+                path.append(current_node)
+                current_node = node_data[current_node]["prev"]
+
+            return path
+
+
+        node_data = {}
+        for node in self.adjacencyList.key():
+            node_data[node] = {
+
+                "h_cost" : heuristic(node,target),
+                "g_cost" : float("inf"),
+                "prev" : None,
+            }
+        
+        
+        yet_to_be_visited = PriorityQueue()
+        yet_to_be_visited.put((0,start))
+        
+        while yet_to_be_visited:
+            node_weight,current_node = yet_to_be_visited.get()
+
+            if current_node == target:
+                return return_path(current_node)
+
+            for neighbor in self.adjacencyList[current_node]:
+                new_cost = node_weight + neighbor[1]
+
+                if new_cost < node_data[neighbor]["g_cost"]:
+                    node_data[neighbor]["g_cost"] = new_cost
+                    yet_to_be_visited.put((new_cost,neighbor[0]))
+                    node_data[neighbor]["prev"] = current_node
+
+
+
+
+        return None
+
 
     def degree(self, node: str)-> float:
         """returns a float"""
