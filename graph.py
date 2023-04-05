@@ -102,23 +102,79 @@ class Graph:
 
 
     def dfs(self, start: str, target: str):
+        """returns a dictionary with the shape:
+        {
+        path: [list of nodes from 'start' to 'target']
+        cost: total cost of going through the path (should be float)
+        }
+        if no path found, return null
+        """
         pass
 
     def bfs(self, start: str, target: str):
+        """returns
+        {
+        path: [list of nodes from 'start' to 'target'] (path should be the optimal solution)
+        cost: total cost of going through the path (should be float)
+        }"""
         pass
 
     def ucs(self, start: str, target: str):
+        """returns
+        {
+        path: [list of nodes from 'start' to 'target'] (path should be the optimal solution)
+        cost: total cost of going through the path (should be float)
+        }"""
         pass
 
     def iterativeDeepeningSearch(self, start: str, target: str):  # not sure about this signature. check it out
+        """returns a dictionary with the shape:
+        {
+        path: [list of nodes from 'start' to 'target']
+        cost: total cost of going through the path (should be float)
+        }
+        if no path found, return null
+        """
         pass
 
     def bidirectionalSearch(self, start: str, target: str): # not sure about this signature. check it out
+        # not sure about the exact shape of the return value. but it should include the path found and the total cost.
         pass
 
     def greedySearch(self, start: str, target: str, heuristic: any):
+        """returns a dictionary with the following shape:
+        {
+        path: [list of nodes from 'start' to 'target']
+        cost: total cost of going through the path (should be float)
+        }
+        if no path found, return null
+        """
         pass
 
     def aStarSearch(self, start: str, target: str, heuristic: any):
+        """returns a dictionary with the following shape:
+        {
+        path: [list of nodes from 'start' to 'target'] (path should be the optimal solution)
+        cost: total cost of going through the path (should be float)
+        }"""
         pass
 
+    def degree(self, node: str)-> float:
+        """returns a float"""
+        pass
+
+    def closeness(self, node: str) -> float:
+        # not sure about what this method should return. you guys do it.
+        pass
+
+    def eigenVector(self, node: str) -> float:
+        # not sure about what this method should return. you buddies figure it out.
+        pass
+
+    def katz(self, node: str) -> float:
+        # not sure about what this method should return. you buddies figure it out.
+        pass
+
+    def pageRAnk(self, node: str) -> float:
+        # not sure about what this method should return. you buddies figure it out.
+        pass
