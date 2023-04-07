@@ -254,7 +254,38 @@ class Graph:
         }
         if no path found, return None
         """
-        pass
+        def deepSearchWithLimit(currentStart,target,visitedOnCurrentPath,currentDepthLimit,costOfCurrentPath):
+            if currentStart == target:
+                self.totalPathCost += costOfCurrentPath
+                return [currentStart]
+            if currentDepthLimit == 0:
+                return None
+            else:
+                if currentStart not in visitedOnCurrentPath:
+                    visitedOnCurrentPath.add(currentStart)
+                    for neighborData in self.adjacencyList[currentStart]:
+                        neighbor,neighbor_cost = neighborData
+                        currentDepthLimit -= 1
+                        if neighbor not in visitedOnCurrentPath:
+                            path = deepSearchWithLimit(neighbor,target,visitedOnCurrentPath,currentDepthLimit,neighbor_cost)
+                            if path:
+                                self.totalPathCost += costOfCurrentPath
+                                return [currentStart] + path
+                return None
+            
+
+        searchDepthLimit = 0
+        self.totalPathCost = 0
+        Cost = 0
+        while True:
+            visited = set()
+            path = deepSearchWithLimit(start,target,visited,searchDepthLimit,Cost)
+            if path:
+                return {
+                  "path" : path,
+                  "cost" :  self.totalPathCost
+                }
+            searchDepthLimit += 1
 
     # not sure about this signature. check it out
     def bidirectionalSearch(self, start: str, target: str):

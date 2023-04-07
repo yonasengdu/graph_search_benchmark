@@ -180,6 +180,11 @@ print("\nresult of doing A* search from Arad to Bucharest:")
 result = romania.aStarSearch("Arad", "Bucharest", Heuristic().distance)
 print(result)
 
+print()
+print("\nresult of doing iterativeDeepeningSearch search from Arad to Bucharest:")
+result = romania.iterativeDeepeningSearch("Arad", "Bucharest")
+print(result)
+
 
 print("\n\n====================== working with a new graph =======================")
 
@@ -243,4 +248,9 @@ print(result)
 
 print("\n doing dfs search from 's' to 'g' on the above graph ... ")
 result = graph.dfs('s', 'g')
+print(result)
+
+
+print("\ndoing iterativeDeepeningSearch search from 's' to 'g' on the above graph ... ")
+result = graph.iterativeDeepeningSearch('s', 'g')
 print(result)
