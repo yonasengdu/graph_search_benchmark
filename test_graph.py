@@ -254,3 +254,33 @@ print(result)
 print("\ndoing iterativeDeepeningSearch search from 's' to 'g' on the above graph ... ")
 result = graph.iterativeDeepeningSearch('s', 'g')
 print(result)
+
+print("======================== using yet another graph =====================")
+
+graph = Graph()
+
+graph.addNode('a')
+graph.addNode('b')
+graph.addNode('c')
+graph.addNode('d')
+graph.addNode('e')
+graph.addNode('f')
+
+graph.addUndirectedEdge('a', 'b', 1, 1)
+graph.addUndirectedEdge('a', 'c', 4, 4)
+graph.addUndirectedEdge('b', 'd', 7, 7)
+graph.addUndirectedEdge('c', 'd', 3, 3)
+graph.addUndirectedEdge('b', 'f', 5, 5)
+graph.addUndirectedEdge('e', 'a', 4, 4)
+
+print("\nHere's what the graph looks like:\n")
+
+graph.show()
+
+print("\nCalculating closeness centralities:\n")
+print(f"closeness centrality of 'a': {graph.closeness('a')}")
+print(f"closeness centrality of 'b': {graph.closeness('b')}")
+print(f"closeness centrality of 'c': {graph.closeness('c')}")
+print(f"closeness centrality of 'd': {graph.closeness('d')}")
+print(f"closeness centrality of 'e': {graph.closeness('e')}")
+print(f"closeness centrality of 'f': {graph.closeness('f')}")

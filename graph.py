@@ -255,6 +255,7 @@ class Graph:
         if no path found, return None
         """
         def deepSearchWithLimit(currentStart,target,visitedOnCurrentPath,currentDepthLimit,costOfCurrentPath):
+            print(currentStart)
             if currentStart == target:
                 self.totalPathCost += costOfCurrentPath
                 return [currentStart]
@@ -396,7 +397,15 @@ class Graph:
 
     def closeness(self, node: str) -> float:
         # not sure about what this method should return. you guys do it.
-        pass
+        totalCost = 0
+        for key in self.adjacencyList:
+            if key == node: continue
+            searchResult = self.ucs(node, key)
+            if(searchResult != None):
+                totalCost += searchResult['cost']
+        if totalCost == 0: return 0
+        return (len(self.adjacencyList) -1)/totalCost
+
 
     def eigenVector(self, node: str) -> float:
         # not sure about what this method should return. you buddies figure it out.
