@@ -171,6 +171,72 @@ result = romania.ucs("Arad", "Bucharest")
 print(result)
 
 print()
+print("\nresult of doing greedy search from Arad to Bucharest:")
+result = romania.greedySearch("Arad", "Bucharest", Heuristic().distance)
+print(result)
+
+print()
 print("\nresult of doing A* search from Arad to Bucharest:")
 result = romania.aStarSearch("Arad", "Bucharest", Heuristic().distance)
+print(result)
+
+
+print("\n\n====================== working with a new graph =======================")
+
+graph = Graph()
+
+graph.addNode('a')
+graph.addNode('b')
+graph.addNode('c')
+graph.addNode('d')
+graph.addNode('e')
+graph.addNode('s')
+graph.addNode('g')
+
+graph.addEdge('s', 'a', cost=1)
+graph.addEdge('a', 'b', cost=1)
+graph.addEdge('b', 'c', cost=1)
+graph.addEdge('a', 'd', cost=3)
+graph.addEdge('a', 'e', cost=8)
+graph.addEdge('e', 'd', cost=1)
+graph.addEdge('d', 'g', cost=2)
+
+
+heuristicMap = {
+    'a': 5,
+    'b': 6,
+    'c': 7,
+    'd': 2,
+    'e': 1,
+    's': 6,
+    'g': 0,
+}
+
+def heuristic(node: str, target: str):
+    return heuristicMap[node]
+
+print("""\n
+Graph looks like:
+\n""")
+
+graph.show()
+
+print("\nhere's the heuristic. 'g' is considered to be the goal:")
+
+print(heuristicMap)
+
+print("\n doing greedy search from 's' to 'g' on the above graph ... ")
+result = graph.greedySearch('s', 'g', heuristic=heuristic)
+print(result)
+
+print("\n doing ucs search from 's' to 'g' on the above graph ... ")
+result = graph.ucs('s', 'g')
+print(result)
+
+print("\n doing A* search from 's' to 'g' on the above graph ... ")
+result = graph.aStarSearch('s', 'g', heuristic=heuristic)
+print(result)
+
+print("\n doing dfs search from 's' to 'g' on the above graph ... ")
+result = graph.dfs('s', 'g')
 print(result)

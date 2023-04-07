@@ -217,7 +217,6 @@ class Graph:
         queue = PriorityQueue()
         queue.put((0, start))
         visited = set()
-        # visited.add(problem.getStartState())
         # a map from child to (parent, child_cost)
         parent_map = {start: (None, 0)}
         # time for the loop
@@ -276,7 +275,45 @@ class Graph:
         }
         if no path found, return None
         """
-        pass
+        def backtrack(parent_map: dict, start: str, goal: str):
+            """We use this function to backtrack through a parent_map that contains a path from start to goal. it returns the correct path list."""
+            path = [goal]
+            current = goal
+            while (current != start):
+                path.append(parent_map[current][0])
+                current = parent_map[current][0]
+            # finally, we need to reverse the path list.
+            answer = [path[len(path)-i-1] for i in range(len(path))]
+            return answer
+
+        # let's make the queue and a visited set
+        queue = PriorityQueue()
+        queue.put((heuristic(start, target), start))
+        visited = set()
+        # a map from child to (parent, child_cost)
+        parent_map = {start: (None, 0)}
+        # time for the loop
+        # again, this line is not reliable so keep an eye on it.
+        while (not queue.empty()):
+            _, current = queue.get()
+            if (current in visited):
+                continue
+            visited.add(current)
+            if (current == target):
+                # now we have the solution, let's backtrack through the parent_map
+                path = backtrack(parent_map, start, current)
+                return {
+                    'path': path,
+                    'cost': parent_map[target][-1]
+                }
+            for entry in self.adjacencyList[current]:
+                neighbor, cost = entry
+                if (neighbor not in visited):
+                    totalCost = cost + parent_map[current][-1]
+                    parent_map[neighbor] = (current, totalCost)
+                    queue.put((heuristic(neighbor, target), neighbor))
+        print("Solution not found.")
+        return None
 
     def aStarSearch(self, start: str, target: str, heuristic: any):
         """returns a dictionary with the following shape:
