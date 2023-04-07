@@ -248,12 +248,18 @@ class Graph:
         path: [list of nodes from 'start' to 'target']
         cost: total cost of going through the path (should be float)
         }
-        if no path found, return null
+        if no path found, return None
         """
         pass
 
     def bidirectionalSearch(self, start: str, target: str): # not sure about this signature. check it out
-        # not sure about the exact shape of the return value. but it should include the path found and the total cost.
+        """returns a dictionary with the following shape:
+        {
+        path: [list of nodes from 'start' to 'target']
+        cost: total cost of going through the path (should be float)
+        }
+        if no path found, return None
+        """
         pass
 
     def greedySearch(self, start: str, target: str, heuristic: any):
@@ -262,7 +268,7 @@ class Graph:
         path: [list of nodes from 'start' to 'target']
         cost: total cost of going through the path (should be float)
         }
-        if no path found, return null
+        if no path found, return None
         """
         pass
 
