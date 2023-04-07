@@ -296,7 +296,66 @@ class Graph:
         }
         if no path found, return None
         """
-        pass
+        if start == target:
+            return {'path': [start], 'cost': 0}
+        # initialize the start and end queues, explored sets, and common node variable
+        start_queue = Queue()
+        end_queue = Queue()
+        start_queue.put(start)
+        end_queue.put(target)
+        start_explored = set([start])
+        end_explored = set([target])
+        common_node = None
+
+        # initialize the dictionaries to keep track of the path and cost from the start and end nodes
+        start_path = {start: [start]}
+        end_path = {target: [target]}
+        start_cost = {start: 0}
+        end_cost = {target: 0}
+
+        # perform the bidirectional BFS search
+        while not start_queue.empty() and not end_queue.empty():
+            # explore from the starting node
+            current = start_queue.get()
+            for neighbor, weight in self.adjacencyList[current]:
+                if neighbor not in start_explored:
+                    start_explored.add(neighbor)
+                    start_path[neighbor] = start_path[current] + [neighbor]
+                    start_cost[neighbor] = start_cost[current] + weight
+                    start_queue.put(neighbor)
+
+                # check for intersection with the end search
+                if neighbor in end_explored:
+                    common_node = neighbor
+                    break
+
+            if common_node:
+                break
+
+            # explore from the ending node
+            current = end_queue.get()
+            for neighbor, weight in self.adjacencyList[current]:
+                if neighbor not in end_explored:
+                    end_explored.add(neighbor)
+                    end_path[neighbor] = [neighbor] + end_path[current]
+                    end_cost[neighbor] = end_cost[current] + weight
+                    end_queue.put(neighbor)
+
+                # check for intersection with the start search
+                if neighbor in start_explored:
+                    common_node = neighbor
+                    break
+
+            if common_node:
+                break
+
+        # construct the final path and cost dictionary
+        if common_node:
+            path = start_path[common_node] + end_path[common_node][1:]
+            cost = start_cost[common_node] + end_cost[common_node]
+            return {'path': path, 'cost': cost}
+        else:
+            return None
 
     def greedySearch(self, start: str, target: str, heuristic: any):
         """returns a dictionary with the following shape:
