@@ -1,4 +1,5 @@
 from graph import Graph
+from heuristic import Heuristic
 
 graph = Graph()
 
@@ -167,4 +168,9 @@ print(result)
 print()
 print("\nresult of doing uniform-cost search from Arad to Bucharest:")
 result = romania.ucs("Arad", "Bucharest")
+print(result)
+
+print()
+print("\nresult of doing A* search from Arad to Bucharest:")
+result = romania.aStarSearch("Arad", "Bucharest", Heuristic().distance)
 print(result)
