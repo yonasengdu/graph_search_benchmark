@@ -1,4 +1,5 @@
 from pprint import pprint
+from queue import Queue, PriorityQueue
 class Graph:
     def __init__(self):
         self.adjacencyList: map = {}
@@ -109,7 +110,43 @@ class Graph:
         }
         if no path found, return null
         """
-        pass
+
+        def backtrack(parent_map: dict, start: str, goal: str):
+            """We use this function to backtrack through a parent_map that contains a path from start to goal. it returns the correct path list."""
+            path = [goal]
+            current = goal
+            while(current != start):
+                    path.append(parent_map[current][0])
+                    current = parent_map[current][0]
+            # finally, we need to reverse the path list.
+            answer = [path[len(path)-i-1] for i in range(len(path))]
+            return answer
+
+        # let's make the stack and a visited set
+        stack = []
+        stack.append(start)
+        visited = set()
+        visited.add(start)
+        parent_map = {start: (None, 0)} # a map from child to (parent, child_cost)
+        # time for the loop
+        while(len(stack) != 0):
+            current = stack.pop()
+            visited.add(current)
+            if(current == target):
+                # now we have the solution, let's backtrack through the parent_map
+                path = backtrack(parent_map, start, current)
+                return {
+                    'path': path,
+                    'cost': parent_map[target][1]
+                }
+            for entry in self.adjacencyList[current]:
+                neighbor, cost = entry
+                if(neighbor not in visited):
+                    totalCost = cost + parent_map[current][1]
+                    parent_map[neighbor] = (current, totalCost)
+                    stack.append(neighbor)
+        print("Solution not found.")
+        return None
 
     def bfs(self, start: str, target: str):
         """returns
@@ -117,7 +154,45 @@ class Graph:
         path: [list of nodes from 'start' to 'target'] (path should be the optimal solution)
         cost: total cost of going through the path (should be float)
         }"""
-        pass
+        def backtrack(parent_map: dict, start: str, goal: str):
+            """We use this function to backtrack through a parent_map that contains a path from start to goal. it returns the correct path list."""
+            path = [goal]
+            current = goal
+            while(current != start):
+                    path.append(parent_map[current][0])
+                    current = parent_map[current][0]
+            # finally, we need to reverse the path list.
+            answer = [path[len(path)-i-1] for i in range(len(path))]
+            return answer
+
+        # let's make the queue and a visited set
+        queue = Queue()
+        queue.put(start)
+        visited = set()
+        visited.add(start)
+        parent_map = {start: (None, 0)} # a map from child to (parent, child_cost)
+        # time for the loop
+        while(not queue.empty()):   # check this line if there's some mysterious bug.
+            current = queue.get()
+            visited.add(current)
+            if(current == target):
+                # now we have the solution, let's backtrack through the parent_map
+                path =  backtrack(parent_map, start, current)
+                return {
+                    'path': path,
+                    'cost': parent_map[target][1]
+                }
+            for entry in self.adjacencyList[current]:
+                neighbor, cost = entry
+                if(neighbor not in visited):
+                    totalCost = cost + parent_map[current][1]
+                    if(neighbor not in parent_map or parent_map[neighbor][-1] > totalCost):
+                        # the above if condition guarantees that the parent_map stores the best cost so far.
+                        parent_map[neighbor] = (current, totalCost)
+                    queue.put(neighbor)
+                    visited.add(neighbor)
+        print("Solution not found.")
+        return None
 
     def ucs(self, start: str, target: str):
         """returns
@@ -125,7 +200,47 @@ class Graph:
         path: [list of nodes from 'start' to 'target'] (path should be the optimal solution)
         cost: total cost of going through the path (should be float)
         }"""
-        pass
+        def backtrack(parent_map: dict, start: str, goal: str):
+            """We use this function to backtrack through a parent_map that contains a path from start to goal. it returns the correct path list."""
+            path = [goal]
+            current = goal
+            while(current != start):
+                    path.append(parent_map[current][0])
+                    current = parent_map[current][0]
+            # finally, we need to reverse the path list.
+            answer = [path[len(path)-i-1] for i in range(len(path))]
+            return answer
+
+        # let's make the queue and a visited set
+        queue = PriorityQueue()
+        queue.put((0, start))
+        visited = set()
+        # visited.add(problem.getStartState())
+        parent_map = {start: (None, 0)} # a map from child to (parent, child_cost)
+        # time for the loop
+        while(not queue.empty()):   # again, this line is not reliable so keep an eye on it.
+            cost, current = queue.get()
+            if(current in visited):
+                continue
+            visited.add(current)
+            if(current == target):
+                # now we have the solution, let's backtrack through the parent_map
+                path =  backtrack(parent_map, start, current)
+                return {
+                    'path': path,
+                    'cost': parent_map[target][-1]
+                }
+            for entry in self.adjacencyList[current]:
+                neighbor, cost = entry
+                if(neighbor not in visited):
+                    totalCost = cost + parent_map[current][-1]
+                    if(neighbor not in parent_map or parent_map[neighbor][-1] > totalCost):
+                        parent_map[neighbor] = (current, totalCost)
+
+                    # print(f"enqueueing: {state} with cost: {totalCost}")
+                    queue.put((totalCost, neighbor))
+        print("Solution not found.")
+        return None
 
     def iterativeDeepeningSearch(self, start: str, target: str):  # not sure about this signature. check it out
         """returns a dictionary with the shape:
