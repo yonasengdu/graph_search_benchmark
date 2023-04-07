@@ -221,6 +221,10 @@ Graph looks like:
 
 graph.show()
 
+print("\nTesting degree lookups ... ")
+print(f"degree of 'a': {graph.degree('a')}")
+print(f"degree of 'd': {graph.degree('d')}")
+
 print("\nhere's the heuristic. 'g' is considered to be the goal:")
 
 print(heuristicMap)

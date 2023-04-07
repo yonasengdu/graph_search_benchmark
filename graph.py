@@ -361,7 +361,7 @@ class Graph:
 
     def degree(self, node: str) -> float:
         """returns a float"""
-        pass
+        return len(self.adjacencyList[node])
 
     def closeness(self, node: str) -> float:
         # not sure about what this method should return. you guys do it.
