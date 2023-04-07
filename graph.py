@@ -395,7 +395,7 @@ class Graph:
         """returns a float"""
         return len(self.adjacencyList[node])
 
-    def closeness(self, node: str) -> float:
+    def closenessCentrality(self, node: str) -> float:
         # not sure about what this method should return. you guys do it.
         totalCost = 0
         for key in self.adjacencyList:
@@ -407,14 +407,97 @@ class Graph:
         return (len(self.adjacencyList) -1)/totalCost
 
 
-    def eigenVector(self, node: str) -> float:
-        # not sure about what this method should return. you buddies figure it out.
-        pass
+    def eigenvalueCentrality(self, node: str, max_iterations=1000, tolerance=1e-6):
+        # Check if node exists in graph
+        if not self.nodeExists(node):
+            raise Exception(f"node {node} does not exist in the graph.")
 
-    def katz(self, node: str) -> float:
-        # not sure about what this method should return. you buddies figure it out.
-        pass
+        # Create adjacency matrix from graph's adjacency list
+        nodes = list(self.adjacencyList.keys())
+        num_nodes = len(nodes)
+        adjacency_matrix = [[0] * num_nodes for _ in range(num_nodes)]
+        for i in range(num_nodes):
+            for j in range(num_nodes):
+                if self.edgeExists(nodes[i], nodes[j]):
+                    adjacency_matrix[i][j] = 1
 
-    def pageRAnk(self, node: str) -> float:
-        # not sure about what this method should return. you buddies figure it out.
-        pass
+        # Initialize eigenvector with all elements equal to 1
+        eigenvector = [1] * num_nodes
+
+        # Power iteration method to calculate largest eigenvalue and eigenvector
+        for _ in range(max_iterations):
+            new_eigenvector = [0] * num_nodes
+            for i in range(num_nodes):
+                for j in range(num_nodes):
+                    new_eigenvector[i] += adjacency_matrix[i][j] * eigenvector[j]
+            norm = sum(new_eigenvector)
+            new_eigenvector = [x_i / norm for x_i in new_eigenvector]
+            if max(abs(x_i - new_x_i) for x_i, new_x_i in zip(eigenvector, new_eigenvector)) < tolerance:
+                break
+            eigenvector = new_eigenvector
+
+        # Return eigenvalue centrality of specific node
+        return eigenvector[nodes.index(node)]
+
+    def katzCentrality(self, node: str):
+        # Check if node exists in graph
+        if not self.nodeExists(node):
+            raise Exception(f"node {node} does not exist in the graph.")
+
+        # Create adjacency matrix from graph's adjacency list
+        nodes = list(self.adjacencyList.keys())
+        num_nodes = len(nodes)
+        adjacency_matrix = [[0] * num_nodes for _ in range(num_nodes)]
+        for i in range(num_nodes):
+            for j in range(num_nodes):
+                if self.edgeExists(nodes[i], nodes[j]):
+                    adjacency_matrix[i][j] = 1
+
+        # Initialize centrality vector with all elements equal to 1.0
+        centrality = [1.0] * num_nodes
+
+        # Calculate Katz centrality using iterative method
+        for _ in range(num_nodes):
+            new_centrality = [1.0] * num_nodes
+            for i in range(num_nodes):
+                for j in range(num_nodes):
+                    # Update new centrality value for node i
+                    new_centrality[i] += 0.1 * adjacency_matrix[i][j] * centrality[j]
+            # Update centrality vector with new values
+            centrality = new_centrality
+
+        # Return Katz centrality of specific node
+        return centrality[nodes.index(node)]
+
+    def pagerankCentrality(self, node: str):
+        # Check if node exists in graph
+        if not self.nodeExists(node):
+            raise Exception(f"node {node} does not exist in the graph.")
+
+        # Create adjacency matrix from graph's adjacency list
+        nodes = list(self.adjacencyList.keys())
+        num_nodes = len(nodes)
+        adjacency_matrix = [[0] * num_nodes for _ in range(num_nodes)]
+        for i in range(num_nodes):
+            for j in range(num_nodes):
+                if self.edgeExists(nodes[i], nodes[j]):
+                    adjacency_matrix[i][j] = 1
+
+        # Calculate out-degree of each node
+        out_degree = [sum(row) for row in adjacency_matrix]
+
+        # Initialize PageRank vector with all elements equal to 1 / num_nodes
+        pagerank = [1 / num_nodes] * num_nodes
+
+        # Calculate PageRank using iterative method with fixed damping factor and number of iterations
+        for _ in range(10):
+            new_pagerank = [0] * num_nodes
+            for i in range(num_nodes):
+                for j in range(num_nodes):
+                    if out_degree[j] > 0:
+                        new_pagerank[i] += 0.85 * adjacency_matrix[j][i] * pagerank[j] / out_degree[j]
+                new_pagerank[i] += 0.15 / num_nodes
+            pagerank = new_pagerank
+
+        # Return PageRank centrality of specific node
+        return pagerank[nodes.index(node)]
