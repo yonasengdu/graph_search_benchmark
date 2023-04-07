@@ -246,10 +246,6 @@ print("\n doing A* search from 's' to 'g' on the above graph ... ")
 result = graph.aStarSearch('s', 'g', heuristic=heuristic)
 print(result)
 
-print("\n doing bidirectional  search from 's' to 'g' on the above graph ... ")
-result = graph.bidirectionalSearch('s', 'e')
-print(result)
-
 print("\n doing dfs search from 's' to 'g' on the above graph ... ")
 result = graph.dfs('s', 'g')
 print(result)
@@ -258,4 +254,3 @@ print(result)
 print("\ndoing iterativeDeepeningSearch search from 's' to 'g' on the above graph ... ")
 result = graph.iterativeDeepeningSearch('s', 'g')
 print(result)
-
