@@ -138,6 +138,7 @@ romania.addUndirectedEdge("Pitesti", "Bucharest", 101, 101)
 romania.addUndirectedEdge("Fagaras", "Bucharest", 211, 211)
 
 
+
 print("""\n
 after:
 romania.addUndirectedEdge("Arad", "Zerind", 75, 75)
@@ -184,6 +185,14 @@ print()
 print("\nresult of doing iterativeDeepeningSearch search from Arad to Bucharest:")
 result = romania.iterativeDeepeningSearch("Arad", "Bucharest")
 print(result)
+
+
+print()
+print("\nresult of doing bidirectionalSearch search from Arad to Bucharest:")
+result = romania.bidirectionalSearch("Arad", "Bucharest")
+print(result)
+
+
 
 
 print("\n\n====================== working with a new graph =======================")
@@ -252,5 +261,10 @@ print(result)
 
 
 print("\ndoing iterativeDeepeningSearch search from 's' to 'g' on the above graph ... ")
+result = graph.iterativeDeepeningSearch('s', 'g')
+print(result)
+
+
+print("\ndoing bidirectionalSearch search from 's' to 'g' on the above graph ... ")
 result = graph.iterativeDeepeningSearch('s', 'g')
 print(result)

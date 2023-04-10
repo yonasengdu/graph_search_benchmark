@@ -1,5 +1,6 @@
 from pprint import pprint
 from queue import Queue, PriorityQueue
+from collections import deque
 
 
 class Graph:
@@ -296,7 +297,65 @@ class Graph:
         }
         if no path found, return None
         """
-        pass
+        def _reconstruct_path(middle,parent_map: dict):
+            """We use this function to backtrack through a parent_map that contains a path from start to goal. it returns the correct path list."""
+            path = []
+            cost = 0
+            while (middle):
+                path.append(middle)
+                cost += parent_map[middle]["cost"]
+                middle = parent_map[middle]["parent"]
+                
+            return path,cost
+        visitedFromStart = set()
+        visitedFromTarget = set()
+        fromStart = deque([start])
+        fromTarget = deque([target])
+
+        parentFromStart = {start: {"parent":None,"cost":0}}
+        parentFromTarget = {target: {"parent":None,"cost":0}}
+
+        while fromStart and fromTarget:
+            currFromStart = fromStart.popleft()
+            currFromTarget = fromTarget.popleft()
+
+            if currFromStart in visitedFromTarget:
+                pathFromStart,cost_1= _reconstruct_path(currFromStart, parentFromStart)
+                pathFromTarget,cost_2= _reconstruct_path(currFromStart, parentFromTarget)
+                return {"path":pathFromStart[::-1] + pathFromTarget[1:],
+                        "cost":cost_1 + cost_2 },
+        
+            if currFromTarget in visitedFromStart:
+                pathFromStart,cost_1= _reconstruct_path(currFromTarget, parentFromStart)
+                pathFromTarget,cost_2= _reconstruct_path(currFromTarget, parentFromTarget)
+                return {"path":pathFromStart[::-1] + pathFromTarget[1:],
+                        "cost":cost_1 + cost_2 },
+     
+                       
+               
+
+            visitedFromStart.add(currFromStart)
+            visitedFromTarget.add(currFromTarget)
+
+            for neighbor, cost in self.adjacencyList[currFromStart]:
+                if neighbor not in visitedFromStart:
+
+                    parentFromStart[neighbor] = {"parent":currFromStart,"cost":cost}
+                    visitedFromStart.add(neighbor)
+                    fromStart.append(neighbor)
+
+            for neighbor, cost in self.adjacencyList[currFromTarget]:
+                if neighbor not in visitedFromTarget:
+    
+                    parentFromTarget[neighbor] = {"parent":currFromTarget,"cost":cost}
+                    visitedFromTarget.add(neighbor)
+                    fromTarget.append(neighbor)
+
+        return "No path"
+
+
+
+
 
     def greedySearch(self, start: str, target: str, heuristic: any):
         """returns a dictionary with the following shape:
@@ -406,6 +465,6 @@ class Graph:
         # not sure about what this method should return. you buddies figure it out.
         pass
 
-    def pageRAnk(self, node: str) -> float:
+    def pageRank(self, node: str) -> float:
         # not sure about what this method should return. you buddies figure it out.
         pass
