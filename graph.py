@@ -59,10 +59,7 @@ class Graph:
                 "the node {node} does not exist in the graph; thus, it can't be deleted.")
         # finally, remove all the edges into the deleted node
         for key in self.adjacencyList:
-            for i in range(len(self.adjacencyList[key])):
-                if self.adjacencyList[key][i][0] == node:
-                    self.adjacencyList[key].pop(i)
-                    break
+            self.adjacencyList[key] = [entry for entry in self.adjacencyList[key] if entry[0] != node]
 
     def addEdge(self, node: str, to: str, cost: float = 0):
         # check if the edge doesn't already exist
