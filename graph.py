@@ -252,7 +252,6 @@ class Graph:
         if no path found, return None
         """
         def deepSearchWithLimit(currentStart,target,visitedOnCurrentPath,currentDepthLimit,costOfCurrentPath):
-            print(currentStart)
             if currentStart == target:
                 self.totalPathCost += costOfCurrentPath
                 return [currentStart]
