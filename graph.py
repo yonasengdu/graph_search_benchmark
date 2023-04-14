@@ -59,7 +59,8 @@ class Graph:
                 "the node {node} does not exist in the graph; thus, it can't be deleted.")
         # finally, remove all the edges into the deleted node
         for key in self.adjacencyList:
-            self.adjacencyList[key] = [entry for entry in self.adjacencyList[key] if entry[0] != node]
+            self.adjacencyList[key] = [
+                entry for entry in self.adjacencyList[key] if entry[0] != node]
 
     def addEdge(self, node: str, to: str, cost: float = 0):
         # check if the edge doesn't already exist
@@ -251,7 +252,7 @@ class Graph:
         }
         if no path found, return None
         """
-        def deepSearchWithLimit(currentStart,target,visitedOnCurrentPath,currentDepthLimit,costOfCurrentPath):
+        def deepSearchWithLimit(currentStart, target, visitedOnCurrentPath, currentDepthLimit, costOfCurrentPath):
             if currentStart == target:
                 self.totalPathCost += costOfCurrentPath
                 return [currentStart]
@@ -261,26 +262,27 @@ class Graph:
                 if currentStart not in visitedOnCurrentPath:
                     visitedOnCurrentPath.add(currentStart)
                     for neighborData in self.adjacencyList[currentStart]:
-                        neighbor,neighbor_cost = neighborData
+                        neighbor, neighbor_cost = neighborData
                         currentDepthLimit -= 1
                         if neighbor not in visitedOnCurrentPath:
-                            path = deepSearchWithLimit(neighbor,target,visitedOnCurrentPath,currentDepthLimit,neighbor_cost)
+                            path = deepSearchWithLimit(
+                                neighbor, target, visitedOnCurrentPath, currentDepthLimit, neighbor_cost)
                             if path:
                                 self.totalPathCost += costOfCurrentPath
                                 return [currentStart] + path
                 return None
-            
 
         searchDepthLimit = 0
         self.totalPathCost = 0
         Cost = 0
         while True:
             visited = set()
-            path = deepSearchWithLimit(start,target,visited,searchDepthLimit,Cost)
+            path = deepSearchWithLimit(
+                start, target, visited, searchDepthLimit, Cost)
             if path:
                 return {
-                  "path" : path,
-                  "cost" :  self.totalPathCost
+                    "path": path,
+                    "cost":  self.totalPathCost
                 }
             searchDepthLimit += 1
 
@@ -402,49 +404,40 @@ class Graph:
         print("Solution not found.")
         return None
 
-    def aStarSearch(self, start: str, target: str, heuristic: any):
+    def aStarSearch(self, start: str, target: str, heuristic):
         """returns a dictionary with the following shape:
         {
         path: [list of nodes from 'start' to 'target'] (path should be the optimal solution)
         cost: total cost of going through the path (should be float)
         }"""
-        def return_path(current_node):
-            path = []
+        fringe = PriorityQueue()
+        fringe.put((0, start))
+        came_from = {start: None}
+        cost_so_far = {start: 0}
 
-            while current_node:
-                path.append(current_node[1])
-                if current_node[1] == start:
-                    return {"path": path[::-1], "cost": node_data[path[0]]["g_cost"]}
-                current_node = node_data[current_node[1]]["prev"]
+        while not fringe.empty():
+            current = fringe.get()[1]
 
-        node_data = {}
-        for node in self.adjacencyList.keys():
-            node_data[node] = {
+            if current == target:
+                break
 
-                "h_cost": heuristic(node, target),
-                "g_cost": float("inf"),
-                "prev": None,
-            }
+            for next_node in self.adjacencyList[current]:
+                new_cost = cost_so_far[current] + next_node[1]
+                if next_node[0] not in cost_so_far or new_cost < cost_so_far[next_node[0]]:
+                    cost_so_far[next_node[0]] = new_cost
+                    priority = new_cost + heuristic(next_node[0], target)
+                    fringe.put((priority, next_node[0]))
+                    came_from[next_node[0]] = current
 
-        yet_to_be_visited = PriorityQueue()
-        yet_to_be_visited.put((0, start))
+        current = target
+        path = []
+        while current != start:
+            path.append(current)
+            current = came_from[current]
+        path.append(start)
+        path.reverse()
 
-        while yet_to_be_visited:
-            node_weight, current_node = yet_to_be_visited.get()
-
-            if current_node == target:
-                return return_path((node_weight, current_node))
-
-            for neighbor in self.adjacencyList[current_node]:
-                new_cost = node_weight + neighbor[1]
-
-                if new_cost < node_data[neighbor[0]]["g_cost"]:
-                    node_data[neighbor[0]]["g_cost"] = new_cost
-                    yet_to_be_visited.put((new_cost, neighbor[0]))
-                    node_data[neighbor[0]]["prev"] = (
-                        node_weight, current_node)
-
-        return None
+        return {'path': path, 'cost': cost_so_far[target]}
 
     def degree(self, node: str) -> float:
         """returns a float"""
@@ -454,13 +447,14 @@ class Graph:
         # not sure about what this method should return. you guys do it.
         totalCost = 0
         for key in self.adjacencyList:
-            if key == node: continue
+            if key == node:
+                continue
             searchResult = self.ucs(node, key)
-            if(searchResult != None):
+            if (searchResult != None):
                 totalCost += searchResult['cost']
-        if totalCost == 0: return 0
-        return (len(self.adjacencyList) -1)/totalCost
-
+        if totalCost == 0:
+            return 0
+        return (len(self.adjacencyList) - 1)/totalCost
 
     def eigenvalueCentrality(self, node: str, max_iterations=1000, tolerance=1e-6):
         # Check if node exists in graph
@@ -484,7 +478,8 @@ class Graph:
             new_eigenvector = [0] * num_nodes
             for i in range(num_nodes):
                 for j in range(num_nodes):
-                    new_eigenvector[i] += adjacency_matrix[i][j] * eigenvector[j]
+                    new_eigenvector[i] += adjacency_matrix[i][j] * \
+                        eigenvector[j]
             norm = sum(new_eigenvector)
             new_eigenvector = [x_i / norm for x_i in new_eigenvector]
             if max(abs(x_i - new_x_i) for x_i, new_x_i in zip(eigenvector, new_eigenvector)) < tolerance:
@@ -517,7 +512,8 @@ class Graph:
             for i in range(num_nodes):
                 for j in range(num_nodes):
                     # Update new centrality value for node i
-                    new_centrality[i] += 0.1 * adjacency_matrix[i][j] * centrality[j]
+                    new_centrality[i] += 0.1 * \
+                        adjacency_matrix[i][j] * centrality[j]
             # Update centrality vector with new values
             centrality = new_centrality
 
@@ -550,9 +546,16 @@ class Graph:
             for i in range(num_nodes):
                 for j in range(num_nodes):
                     if out_degree[j] > 0:
-                        new_pagerank[i] += 0.85 * adjacency_matrix[j][i] * pagerank[j] / out_degree[j]
+                        new_pagerank[i] += 0.85 * adjacency_matrix[j][i] * \
+                            pagerank[j] / out_degree[j]
                 new_pagerank[i] += 0.15 / num_nodes
             pagerank = new_pagerank
 
         # Return PageRank centrality of specific node
         return pagerank[nodes.index(node)]
+    
+    def __str__(self):
+        return str(self.adjacencyList)
+    
+    def __repr__(self):
+        return self.__str__()
