@@ -275,6 +275,7 @@ class Graph:
         searchDepthLimit = 0
         self.totalPathCost = 0
         Cost = 0
+        maxDepthLimit = len([i for i in self.adjacencyList.keys()])
         while True:
             visited = set()
             path = deepSearchWithLimit(
@@ -284,6 +285,9 @@ class Graph:
                     "path": path,
                     "cost":  self.totalPathCost
                 }
+            if searchDepthLimit > maxDepthLimit:
+               
+                return {"path Not found"}
             searchDepthLimit += 1
 
     # not sure about this signature. check it out
